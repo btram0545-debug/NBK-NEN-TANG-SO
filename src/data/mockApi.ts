@@ -182,6 +182,7 @@ function seedRow(r: Omit<Row, 'id' | 'updatedAt' | 'escalated' | 'approved' | 'e
 const me1 = 'u-hs2026001'
 const counselor = 'u-tv2026001'
 const teacher = 'u-gv2026001'
+const supervisor = 'u-qs2026001'
 
 const c1 = seedRow(
   {
@@ -544,7 +545,12 @@ export const mockApi: Api = {
     const row = seedRow({ kind: 'incident', category: input.type, description: input.description, severity: input.severity, status: 'submitted', studentId: v.id, isAnonymous: input.isAnonymous, privacy: 'standard', location: input.location, incidentTime: input.incidentTime, involved: input.involved, assigneeId: null, evidence: input.files.length, createdAt: new Date().toISOString() })
     log(v.id, 'Gửi báo cáo sự việc', 'incident', row.id)
     notify(v.id, { category: 'incident', title: 'Đã nhận báo cáo của bạn', body: 'Nhà trường đã ghi nhận và sẽ xử lý theo mức độ.', link: `/student/incidents/${row.id}` })
-    if (input.severity === 'urgent') notify('u-qs2026001', { category: 'incident', title: 'Có báo cáo khẩn cấp', body: 'Một báo cáo mức Khẩn cấp vừa được gửi.', link: '/supervisor/incidents' })
+    notify(supervisor, {
+      category: 'incident',
+      title: input.severity === 'urgent' ? 'Có báo cáo khẩn cấp cần tiếp nhận' : 'Có báo cáo mới cần tiếp nhận',
+      body: `Báo cáo ${caseCode('incident', row.id)} đang chờ phân loại và phân công.`,
+      link: '/supervisor/incidents',
+    })
     return wait(project(row, v), 700)
   },
   async updateCase(kind, id, patch: CaseUpdate) {

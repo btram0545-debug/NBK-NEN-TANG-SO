@@ -87,4 +87,33 @@ describe('phân quyền (giao diện demo phản ánh đúng RLS ở cơ sở d�
     expect(item.status).toBe('pending')
     expect((await api.listMyCases()).length).toBe(before + 1)
   })
+
+  it('chạy đủ quy trình báo cáo: quản sinh tiếp nhận, phân công, chuyển BGH và phê duyệt', async () => {
+    await as('hs2026001')
+    const incident = await api.createIncident({
+      type: 'harassment',
+      severity: 'serious',
+      description: 'Có lời đe doạ lặp lại trong nhóm chat của lớp.',
+      isAnonymous: false,
+      files: [],
+    })
+    expect((await api.listNotifications()).some((n) => n.title === 'Đã nhận báo cáo của bạn')).toBe(true)
+
+    await as('qs2026001')
+    expect((await api.listNotifications()).some((n) => n.title === 'Có báo cáo mới cần tiếp nhận')).toBe(true)
+    await api.updateCase('incident', incident.id, { assigneeId: 'u-gv2026001' })
+
+    await as('gv2026001')
+    expect((await api.listNotifications()).some((n) => n.title === 'Có ca mới được phân công')).toBe(true)
+
+    await as('qs2026001')
+    await api.updateCase('incident', incident.id, { escalate: true })
+    const supervisorDetail = await api.getCase('incident', incident.id)
+    expect(supervisorDetail.item.escalated).toBe(true)
+
+    await as('bgh2026001')
+    expect((await api.listNotifications()).some((n) => n.title === 'Ca được chuyển lên Ban giám hiệu')).toBe(true)
+    await api.approveCase('incident', incident.id, 'Đồng ý phối hợp giáo viên chủ nhiệm và tư vấn viên.')
+    expect((await api.getCase('incident', incident.id)).item.approved).toBe(true)
+  }, 15_000)
 })

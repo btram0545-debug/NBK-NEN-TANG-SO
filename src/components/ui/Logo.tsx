@@ -1,4 +1,5 @@
 import { cn } from '@/lib/cn'
+import { env } from '@/lib/env'
 
 /** Biểu tượng: khung chat (lắng nghe) + khiên (an toàn) + mũ cử nhân (học đường). */
 export function LogoMark({ className, title }: { className?: string; title?: string }) {
@@ -19,7 +20,7 @@ export function Logo({ compact, className }: { compact?: boolean; className?: st
       {!compact && (
         <span className="leading-tight">
           <span className="block text-[0.9375rem] font-semibold tracking-tight text-ink">Tư vấn học đường</span>
-          <span className="block text-[0.6875rem] text-ink-3">School Counseling Platform</span>
+          <span className="block truncate text-[0.6875rem] text-ink-3">{env.schoolName}</span>
         </span>
       )}
     </span>

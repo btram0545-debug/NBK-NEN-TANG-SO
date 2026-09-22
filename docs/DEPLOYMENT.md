@@ -14,7 +14,7 @@ git push -u origin main
 ## 2. Supabase
 
 1. Tạo dự án.
-2. Chạy migration `001` → `004` theo thứ tự (`supabase db push` hoặc SQL Editor). Migration `004` tạo bucket riêng tư `evidence`.
+2. Chạy migration `001` → `005` theo thứ tự (`supabase db push` hoặc SQL Editor). Migration `004` tạo bucket riêng tư `evidence`; migration `005` tạo thông báo tiếp nhận báo cáo cho quản sinh.
 3. Tắt đăng ký công khai; tạo tài khoản do nhà trường cấp.
 4. Đặt tài khoản Ban giám hiệu đầu tiên bằng SQL (README mục 7, bước 4).
 5. Kiểm tra phân quyền: đăng nhập từng vai trò, thử truy cập trái quyền.
@@ -37,7 +37,19 @@ Settings → Pages → Source: GitHub Actions. Project site nằm dưới `/<tê
 
 Kết nối repository, đặt cùng biến môi trường, cấu hình mọi đường dẫn về `index.html`, đặt `VITE_BASE_PATH=/`.
 
-## 6. Checklist trước khi dùng cho học sinh thật
+## 6. Render
+
+Repository đã có sẵn `render.yaml`. Trong Render chọn **New → Blueprint**, kết nối repository và xác nhận file Blueprint.
+
+- Build command: `npm ci && npm run build`
+- Publish directory: `dist`
+- Rewrite SPA: `/*` → `/index.html`
+- `VITE_SUPABASE_URL` và `VITE_SUPABASE_PUBLISHABLE_KEY`: nhập trong Environment của Render, không commit vào Git.
+- `VITE_SCHOOL_NAME` đã đặt là `Trường THPT Nguyễn Bỉnh Khiêm`; `VITE_BASE_PATH` phải là `/`.
+
+Sau khi deploy, kiểm tra URL gốc và tải lại trực tiếp các route như `/login`, `/student`, `/supervisor/incidents`.
+
+## 7. Checklist trước khi dùng cho học sinh thật
 
 - [ ] Bản triển khai đã kết nối Supabase (không phải chế độ demo)
 - [ ] Đã tắt đăng ký công khai

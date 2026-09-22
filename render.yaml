@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: nbk-tu-van-hoc-duong
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: VITE_SCHOOL_NAME
+        value: Trường THPT Nguyễn Bỉnh Khiêm
+      - key: VITE_QUICK_EXIT_URL
+        value: https://www.google.com
+      - key: VITE_ACCOUNT_EMAIL_DOMAIN
+        sync: false
+      - key: VITE_BASE_PATH
+        value: /
