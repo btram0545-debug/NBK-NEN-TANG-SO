@@ -1,0 +1,227 @@
+@import '@fontsource-variable/inter/index.css';
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------
+   Design tokens
+   Nền sáng lạnh + xanh dương thương hiệu + teal làm điểm nhấn "an toàn".
+   Đỏ chỉ dành cho khẩn cấp. Màu ngữ nghĩa được đổi hẳn ở dark mode
+   (không chỉ đảo màu) để giữ độ tương phản và cảm giác dịu mắt.
+------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --surface-2: #eef3f9;
+  --line: #e3e9f1;
+  --line-strong: #cbd5e2;
+
+  --ink: #16243a;
+  --ink-2: #4a5a70;
+  --ink-3: #637287;
+
+  --brand: #2a5bd7;
+  --brand-hover: #2249b0;
+  --on-brand: #ffffff;
+  --brand-soft: #edf3ff;
+  --brand-soft-2: #dce8ff;
+  --brand-ink: #2249b0;
+
+  --teal: #0e8a7d;
+  --teal-soft: #e6f6f3;
+  --teal-ink: #0b6e65;
+
+  --ok-soft: #e5f6ec;
+  --ok-ink: #17794a;
+  --warn-soft: #fff3d6;
+  --warn-ink: #8f5500;
+  --danger: #c63a3a;
+  --danger-soft: #fdecec;
+  --danger-ink: #a72828;
+
+  --pop-shadow: 0 12px 32px -10px rgb(22 36 58 / 0.22), 0 2px 6px -2px rgb(22 36 58 / 0.08);
+  --low-shadow: 0 1px 2px rgb(22 36 58 / 0.05);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --bg: #0d1522;
+  --surface: #121d2e;
+  --surface-2: #182639;
+  --line: #22324a;
+  --line-strong: #33455f;
+
+  --ink: #e7edf6;
+  --ink-2: #aab7ca;
+  --ink-3: #8b9bb2;
+
+  --brand: #3f6fe0;
+  --brand-hover: #5583ee;
+  --on-brand: #ffffff;
+  --brand-soft: #16284a;
+  --brand-soft-2: #1d3563;
+  --brand-ink: #9db9ff;
+
+  --teal: #2bb5a5;
+  --teal-soft: #0f2c2d;
+  --teal-ink: #6fd8cb;
+
+  --ok-soft: #10301f;
+  --ok-ink: #7fd8a4;
+  --warn-soft: #362a0d;
+  --warn-ink: #f2c46b;
+  --danger: #e5595a;
+  --danger-soft: #3a1618;
+  --danger-ink: #ff9b9b;
+
+  --pop-shadow: 0 14px 34px -10px rgb(0 0 0 / 0.55), 0 2px 6px -2px rgb(0 0 0 / 0.3);
+  --low-shadow: none;
+}
+
+@theme inline {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-on-brand: var(--on-brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-soft-2: var(--brand-soft-2);
+  --color-brand-ink: var(--brand-ink);
+
+  --color-teal: var(--teal);
+  --color-teal-soft: var(--teal-soft);
+  --color-teal-ink: var(--teal-ink);
+
+  --color-ok-soft: var(--ok-soft);
+  --color-ok-ink: var(--ok-ink);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-ink: var(--warn-ink);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-ink: var(--danger-ink);
+
+  /* Bo góc theo cấp bậc: control < khối nội dung < hero */
+  --radius-ctl: 10px;
+  --radius-box: 14px;
+  --radius-hero: 24px;
+
+  --shadow-pop: var(--pop-shadow);
+  --shadow-low: var(--low-shadow);
+
+  /* Typography scale */
+  --text-display: 2.5rem;
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.025em;
+  --text-h1: 1.625rem;
+  --text-h1--line-height: 1.25;
+  --text-h1--letter-spacing: -0.015em;
+  --text-h2: 1.1875rem;
+  --text-h2--line-height: 1.35;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: 1rem;
+  --text-h3--line-height: 1.4;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.6;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.4;
+
+  --animate-fade-in: fade-in 160ms ease-out;
+  --animate-page: page-in 200ms ease-out;
+  --animate-pop-in: pop-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-sheet-in: sheet-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-toast-in: toast-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-shimmer: shimmer 1.4s ease-in-out infinite;
+  --animate-ring: ring-out 5s ease-out infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes sheet-in {
+    from { transform: translateY(24px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+  }
+  @keyframes ring-out {
+    0% { opacity: 0; transform: scale(0.6); }
+    15% { opacity: 0.6; }
+    100% { opacity: 0; transform: scale(1.5); }
+  }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv11', 'ss03';
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-size: var(--text-body);
+    line-height: 1.6;
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+  p { margin: 0; text-wrap: pretty; }
+  button { font: inherit; color: inherit; }
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::selection { background: var(--brand-soft-2); }
+  input::placeholder, textarea::placeholder { color: var(--ink-3); opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+  .scrollbar-none { scrollbar-width: none; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+}
+
+@media print {
+  body { background: #fff; }
+  .no-print { display: none !important; }
+}

@@ -1,0 +1,26 @@
+import '@testing-library/jest-dom/vitest'
+import { afterEach } from 'vitest'
+import { cleanup } from '@testing-library/react'
+
+afterEach(() => cleanup())
+
+// jsdom chưa có các API này
+if (!window.matchMedia) {
+  window.matchMedia = ((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
+    dispatchEvent: () => false,
+  })) as typeof window.matchMedia
+}
+class RO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+;(globalThis as unknown as { ResizeObserver: typeof RO }).ResizeObserver ??= RO
+window.HTMLElement.prototype.scrollIntoView ??= () => {}

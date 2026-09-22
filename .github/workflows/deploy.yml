@@ -1,0 +1,75 @@
+name: Deploy Web
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Check
+        run: |
+          npm run typecheck
+          npm run lint
+          npm run test
+
+      - name: Warn if Supabase is not configured
+        env:
+          URL: ${{ secrets.VITE_SUPABASE_URL }}
+        run: |
+          if [ -z "$URL" ]; then
+            echo "::warning::Chưa cấu hình secret VITE_SUPABASE_URL: bản triển khai sẽ chạy ở chế độ DEMO (dữ liệu mẫu). Không dùng cho học sinh thật."
+          fi
+
+      - name: Build
+        run: npm run build
+        env:
+          # Trang GitHub Pages dạng project site nằm dưới /<tên-repo>/. Nếu dùng tên miền riêng, đặt thành "/".
+          VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH || format('/{0}/', github.event.repository.name) }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_SCHOOL_NAME: ${{ vars.VITE_SCHOOL_NAME }}
+          VITE_QUICK_EXIT_URL: ${{ vars.VITE_QUICK_EXIT_URL }}
+          VITE_ACCOUNT_EMAIL_DOMAIN: ${{ vars.VITE_ACCOUNT_EMAIL_DOMAIN }}
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
